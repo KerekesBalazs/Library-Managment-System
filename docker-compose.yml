@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: library-mssql-container
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Secret Password@123"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - mssql-data:/var/opt/mssql
+
+volumes:
+  mssql-data:
