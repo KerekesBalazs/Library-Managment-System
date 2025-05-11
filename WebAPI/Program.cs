@@ -1,25 +1,52 @@
-var builder = WebApplication.CreateBuilder(args);
+using Serilog;
+using WebAPI.Configurations;
+using Backend.Infrastructure.Configurations;
 
-// Add services to the container.
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .WriteTo.Console()
+    .CreateLogger();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Information("Starting up the application");
+    var builder = WebApplication.CreateBuilder(args);
+
+    Log.Information("Setting up the application");
+    builder.Logging
+        .ClearProviders()
+        .AddSerilog(Log.Logger);
+
+    // Add services to the container.
+    builder.Services
+        .AddBackendServices(builder.Configuration)
+        .AddWebApiServices(builder.Configuration);
+
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+    var app = builder.Build();
+
+    //// Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    //app.UseHttpsRedirection();
+
+    app.MapControllers();
+
+    Log.Information("Application started successfully! Waiting for requests...");
+    app.Run();
+
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
