@@ -1,6 +1,7 @@
 ﻿using Backend.Application.Books.UseCases.CreateBook;
 using Backend.Application.Books.UseCases.DeleteBook;
 using Backend.Application.Books.UseCases.GetBook;
+using Backend.Application.Books.UseCases.GetBooks;
 using Backend.Application.Books.UseCases.UpdateBook;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ namespace Backend.Application.Books.DI
             services.AddScoped<IUpdateBookUseCase, UpdateBookUseCase>();
             services.AddScoped<IGetBookUseCase, GetBookUseCase>();
             services.AddScoped<IDeleteBookUseCase, DeleteBookUseCase>();
+            services.AddScoped<IGetBooksUseCase, GetBooksUseCase>();
 
             return services;
         }

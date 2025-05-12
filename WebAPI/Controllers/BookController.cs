@@ -9,6 +9,7 @@ using Backend.Domain.Exceptions;
 using WebAPI.DTOModels.Incoming.Book;
 using Backend.Application.Books.DTOs.Create;
 using Backend.Application.Books.DTOs.Update;
+using Backend.Application.Books.UseCases.GetBooks;
 
 namespace WebAPI.Controllers
 {
@@ -19,6 +20,7 @@ namespace WebAPI.Controllers
         IUpdateBookUseCase _updateBookUseCase,
         IDeleteBookUseCase _deleteBookUseCase,
         IGetBookUseCase _getBookUseCase,
+        IGetBooksUseCase _getBooksUseCase,
         IMapper _mapper,
         ILogger<BookController> _logger
     ) : ControllerBase
@@ -42,6 +44,31 @@ namespace WebAPI.Controllers
             {
                 _logger.LogWarning(ex, "Book with ID {Id} not found", id);
                 return NotFound(new BaseResponse<GetBookResponse>
+                {
+                    Type = "Warning",
+                    Message = ex.Message,
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBooks([FromQuery] BookFilterDTO filters)
+        {
+            try
+            {
+                var result = await _getBooksUseCase.ExecuteAsync(filters);
+
+                return Ok(new BaseResponse<IEnumerable<GetBookResponse>>
+                {
+                    Data = _mapper.Map<IEnumerable<GetBookResponse>>(result),
+                    Type = "Success",
+                    Message = "server.book_found"
+                });
+            }
+            catch (BookNotFoundException ex)
+            {
+                _logger.LogWarning(ex, "Book not found");
+                return NotFound(new BaseResponse<IEnumerable<GetBookResponse>>
                 {
                     Type = "Warning",
                     Message = ex.Message,

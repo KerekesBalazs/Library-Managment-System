@@ -1,18 +1,16 @@
-﻿using Backend.Domain.Entities;
-
-namespace Backend.Application.Interfaces.Repositories
+﻿namespace Backend.Application.Interfaces.Repositories
 {
     public interface ILoanRepository
     {
-        public Task<Loan?> GetLoanByIdAsync(int id);
+        public Task<Backend.Domain.Entities.Loan?> GetLoanByIdAsync(int id);
 
-        public Task<List<Loan>> GetLoansAsync();
+        public Task<List<Backend.Domain.Entities.Loan>> GetLoansAsync();
 
-        public Task<List<Loan>> GetLoansByBookIdAsync(int bookId);
+        public Task<List<Backend.Domain.Entities.Loan>> GetLoansByBookIdAsync(int bookId);
 
-        public Task<Loan> AddLoanAsync(Loan loan);
+        public Task<Backend.Domain.Entities.Loan> AddLoanAsync(Backend.Domain.Entities.Loan loan);
 
-        public Loan UpdateLoan(Loan loan);
+        public Backend.Domain.Entities.Loan UpdateLoan(Backend.Domain.Entities.Loan loan);
 
         public Task<bool> DeleteLoadAsync(int loanId);
     }

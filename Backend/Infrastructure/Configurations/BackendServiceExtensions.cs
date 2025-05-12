@@ -5,6 +5,7 @@ using Backend.Infrastructure.Data;
 using Backend.Application.Interfaces.Repositories;
 using Backend.Infrastructure.Repositories;
 using Backend.Application.Books.DI;
+using Backend.Application.Loan.DI;
 
 namespace Backend.Infrastructure.Configurations
 {
@@ -48,6 +49,8 @@ namespace Backend.Infrastructure.Configurations
             return services
                 .AddScoped<IBookRepository, BookRepository>()
                 .AddScoped<ILoanRepository, LoanRepository>()
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<IReservationRepository, ReservationRepository>()
                 ;
         }
 
@@ -55,6 +58,7 @@ namespace Backend.Infrastructure.Configurations
         {
             return services
                 .AddBookUseCases()
+                .AddLoanUseCases()
                 ;
         }
     }
